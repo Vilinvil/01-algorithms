@@ -1,43 +1,31 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 // QuickSort ascending(по возрастанию)
 func QuickSort(sl []int) []int {
 	if len(sl) <= 1 {
 		return sl
 	} else {
-		mid := (len(sl) - 1) / 2
+		left := make([]int, 0)
+		right := make([]int, 0)
+		mid := (len(sl) + 1) / 2
 
-		var left, right []int
-		for i := 0; i < len(sl); i++ {
-			if i == mid {
-				i++
-			}
-			if sl[i] < sl[mid] {
-				left = append(left, sl[i])
-			}
-			if sl[i] >= sl[mid] {
-				right = append(right, sl[i])
+		// Pivot нужен , т.к. иногда append затирает элементы старого слайса для оптимизации,
+		// и на его место вписывает элементы, и результат возвращает. В таком случае sl[mid] даст некоректный результат, т.к. slice sl изменится
+		pivot := sl[mid]
+		for _, val := range append(sl[:mid], sl[mid+1:]...) { // sl without sl[mid]
+			if val < pivot {
+				left = append(left, val)
+			} else { // val >= pivot here
+				right = append(right, val)
 			}
 		}
-		return append(append(QuickSort(left), sl[mid]), QuickSort(right)...) // left(sort) + mid + right(sort)
+		return append(append(QuickSort(left), pivot), QuickSort(right)...) // left(sort) + mid + right(sort)
 	}
 }
 
 func main() {
-
-	var ar []int
-	if ar == nil {
-		fmt.Println("sdfg")
-	}
-	ar = append(ar, 1)
-	if ar == nil {
-		fmt.Println("sddfghfg")
-	}
-
+	a := []int{-1, 2, -3, -4, 5, -6, 7, -8, -9}
+	fmt.Println(QuickSort(a))
 }
-
-//a := []int{-1, 2, -3, -4, 5, -6, 7, -8, -9}	//fmt.Println(QuickSort(a))

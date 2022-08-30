@@ -2,12 +2,9 @@ package main
 
 import "fmt"
 
+// FindMaxNum find max element in []int and return its value
 func FindMaxNum(sl []int, max int) int {
 	switch len(sl) {
-	case 0:
-		{
-			return max
-		}
 	case 1:
 		{
 			if sl[0] >= max {
