@@ -3,11 +3,12 @@ package main
 import (
 	"container/list"
 	"fmt"
+	"log"
 	"strings"
 )
 
-// Linear search element in slice.
-func isElemInSlice(elem string, sl []string) bool {
+// IsElemInSlice is func linear search element in slice.
+func IsElemInSlice(elem string, sl []string) bool {
 	for _, v := range sl {
 		if v == elem {
 			return true
@@ -21,7 +22,7 @@ func main() {
 	// Create queue based on doubly linked list. (FIFO)
 	queue := list.New()
 
-	// Init graph friends of man.
+	// Init graph friends of man. This graph is singly connected(односвязный)
 	graph := make(map[string][]string)
 	graph["I"] = []string{"Ivan manager", "Danil engineer", "Alex itGay"}
 	graph["Ivan manager"] = []string{"Nik student", "Ken mechanic"}
@@ -33,22 +34,24 @@ func main() {
 	queue.PushBack("I")
 	for queue.Len() > 0 {
 		el := queue.Front()
-		//str, err := el.Value.(string)
-		str := fmt.Sprintf("%v", el.Value)
-		//if err == true {
-		//	log.Fatalf("Element %v don`t convert to string ", el)
-		//}
-		//fmt.Println(str)
-		if isElemInSlice(str, trustPeople) || !strings.Contains(str, "killer") { //killer check
-			//fmt.Println("inside")
+		str, ok := el.Value.(string)
+		if !ok {
+			log.Fatalf("Element %v don`t convert to string ", el)
+		}
+
+		if !IsElemInSlice(str, trustPeople) {
+			if strings.Contains(str, "killer") { //killer check
+				fmt.Printf("%v is killer!!!\n", str)
+				break
+			}
+
 			for _, val := range graph[str] {
 				queue.PushBack(val)
-				//fmt.Println("inside 2")
 			}
+
+			trustPeople = append(trustPeople, str)
 			queue.Remove(el)
 			continue
 		}
-		fmt.Printf("%v is killer!!!\n", str)
-		break
 	}
 }
